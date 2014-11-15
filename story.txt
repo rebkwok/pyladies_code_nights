@@ -1,0 +1,25 @@
+Title,,,,,
+
+You run into the building, and see a body in the middle of the room. Out of the corner of your eye, you spot a figure scrambling out of the window.
+
+Do you: stay and check the body, or chase the figure?
+
+Enter 1 to stay; enter 2 to chase
+
+DEATH!!
+
+1
+
+2
+
+The body is a man, who is not responsive. You think to yourself that you should probably check the rest of the house. The house has two floors.
+
+Do you: Stay downstairs and check the other rooms, or go upstairs and take a look there?
+
+Enter 1 to go downstairs; enter 2 to check upstairs
+
+Eaten by goblins!!
+
+2
+
+1

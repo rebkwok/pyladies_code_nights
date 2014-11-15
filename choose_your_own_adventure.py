@@ -1,92 +1,70 @@
+import sys 
+
 class Game():
     
-    def __init__(self, name):
+    def __init__(self, file, name):
         self.name = name
         self.end = False
-    
-    def _choice(self, choices, input_string, next, end_string):
+        file = file.read()
+        data = file.split("\n\n")
+          
+        self.title = data[0].split(",")[0]
+        data = data[1:]
+        self.story_text = []
+        self.question = []
+        self.input_string = []
+        self.end_string = []
+        self.continue_response = []
+        self.end_response = []
+        
+        for number, paragraph in enumerate(data, 1):
+            if number % 6 == 1:
+                self.story_text.append(paragraph)
+            elif number % 6 ==2:
+                self.question.append(paragraph)
+            elif number % 6 ==3:
+                paragraph = paragraph + "\n" 
+                self.input_string.append(paragraph)
+            elif number % 6 ==4:
+                self.end_string.append(paragraph) 
+            elif number % 6 ==5:
+                self.continue_response.append(paragraph)
+            elif number % 6 ==0:
+                self.end_response.append(paragraph.strip())   
+                                
+    def _choice(self, choices, input_string, end_string, index):
         choice = input(input_string) 
-
+        
         while choice not in choices:
-            choice = input(input_string) 
-            
+            choice = input(input_string)
+
         if choice == choices[0]:
-            next()
+            if index == len(self.story_text) - 1:
+                self.end_game()
         elif choice == choices[1]:
-            print(end_string)
+            print(end_string, "\n")
             self.end_game()
-     
-    def start(self):
-        print("""
-        Welcome, {}.  
-        You run into the building, and see a body in the middle of the room.
-        Out of the corner of your eye, you spot a figure scrambling out the window
-                
-        Do you:
-        - Stay and check the body, or
-        - Chase the figure!""".format(self.name))
-        print()
-        
-        input_string = "Enter 1 to stay; enter 2 to chase\n"
-        end_string = "DEATH!!"
-        self._choice(("1", "2"), input_string, self.check_house, end_string)
-
-    def check_house(self):
-        print("""
-        The body is a man, who is not responsive. You think to yourself that you 
-        should probably check the rest of the house.
-        The house has two floors.
-        
-        Do you:
-        - Stay downstairs and check the other rooms, or
-        - Go upstairs and take a look there?""")
-        print()
-        
-        input_string = "Enter 1 to go downstairs; enter 2 to check upstairs\n"
-        end_string = "Eaten by goblins!!"
-        self._choice(("2", "1"), input_string, self.go_upstairs, end_string)
-        
-    def go_upstairs(self):
-        print("""
-        You hear commotion coming from a room at the end of the corridor. 
-        
-        Do you:
-        - Investigate, or
-        - Call for help?""")
-        print()
-        
-        input_string = "Enter 1 to go investigate; enter 2 to call for help\n"
-        end_string = "DEATH!!"
-        self._choice(("1", "2"), input_string, self.investigate, end_string)
     
-    def investigate(self):
+    def create_story(self):
+        print("Welcome to the story {}: {}\n".format(self.name, self.title))
+        
+        for i, paragraph in enumerate(self.story_text, 0):
+            if not self.end:
+                print(paragraph, "\n")
+                print(self.question[i], "\n")
+                self._choice((self.continue_response[i], self.end_response[i]), 
+                              self.input_string[i], self.end_string[i], i)
       
-        print("""
-        You find a woman lying on the floor in a pool of blood.
-
-        Do you:
-        - Phone an ambulance or
-        - Question her?""")
-        print()
-
-        input_string = "Enter 1 to phone an ambulance; enter 2 to question her\n"
-        end_string = "DEATH!!"
-        self._choice(("2", "1"), input_string, self.question, end_string)
-    
-    def question(self):
-        
-        print("""
-        You question the woman who tells you that she has been stabbed 
-        by the vicious killer Kate. Well done Detective {}!""".format(self.name))
-        self.end_game()
     def end_game(self):
         self.end = True
 
 def start_game():
+    file = open(sys.argv[-1], "r")
+
     name = input("What is your name?\n") 
-    new_game = Game(name)
+    new_game = Game(file, name)
     while new_game.end == False:
-        new_game.start()
+        new_game.create_story()
     
     print("\n============")
     print("Game over")
